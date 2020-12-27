@@ -1,2 +1,15 @@
 
 postgres_login_info.txt
+archive/circuits.csv
+archive/constructor_results.csv
+archive/constructor_standings.csv
+archive/constructors.csv
+archive/driver_standings.csv
+archive/drivers.csv
+archive/lap_times.csv
+archive/pit_stops.csv
+archive/qualifying.csv
+archive/races.csv
+archive/results.csv
+archive/seasons.csv
+archive/status.csv
