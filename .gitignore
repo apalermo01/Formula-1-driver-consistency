@@ -4,6 +4,9 @@ F1 data cleaning.ipynb
 F1 experimentation and exploration.ipynb
 archive/circuits.csv
 archive/constructor_results.csv
+archive/constructor_standings.csv
+archive/constructors.csv
+archive/driver_standings.csv
 archive/drivers.csv
 archive/lap_times.csv
 archive/pit_stops.csv
@@ -12,9 +15,6 @@ archive/races.csv
 archive/results.csv
 archive/seasons.csv
 archive/status.csv
-archive/driver_standings.csv
-archive/constructors.csv
-archive/constructor_standings.csv
 drafting.docx
 formula-1-world-championship-1950-2020.zip
 header image.png
