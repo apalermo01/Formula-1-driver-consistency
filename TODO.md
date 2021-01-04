@@ -20,3 +20,4 @@ Planned updates (not in order)
 
 - Check lap filtering for every race in a given season to ensure that detected safety car periods are accurate
 
+- Calculate the lap time distributions of stints (laps between pit stops) instead of the full race. This throws out the variation form using different tire compounds during the race. 
