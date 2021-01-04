@@ -1,26 +1,22 @@
 Planned updates (not in order)
 
-- clean data to exclude drivers that crashed on the first lap of the race. This is most likely what's causing the coefficient of variation plots to show a very low coefficient of variation (See the coefficeints of variation plot for the 2015 season).
+- Update driver names / codes and team names to handle historical data with the aim of eventually finding the most consistent driver of all time. Most likely use the full name of a driver when no code is available or use the last 3 letters of their last name. 
 
-- construct line plots showing the lap times of each driver over the course of a race. 
+- Implement a key that gives the full driver name for each code 
 
-- Update driver names / codes and team names to handle historical data with the aim of eventually finding the most consistent driver of all time. Most likely I will either use the full name of a driver when no code is available or use the last 3 letters of their last name. 
+- Analyze the differences between teammates
 
-- add properly formatted docstrings to all functions
+- When getting lap distributions, use cumulative lap times to figure out which drivers are a lap down on a lap-by-lap basis
 
-- filter data to only feature drivers that drove in 2 or more races in any given season. 
+- Add a table with team, hex code, and year to account for livery changes
 
-- include a key that gives the full driver name for each code 
+- Hypothesis test with red bull starting and finishing positions
 
-- Move query functions to a .py file to avoid repeating code
+- Investigate what the season results would have looked like if a given driver hadn't retired. 
 
 - Convert these visualizations into interactive dashboards using excel and / or tableau
 
+- Develop a simple race strategy model using lap data from pit stops
 
-Other ideas: 
+- Check lap filtering for every race in a given season to ensure that detected safety car periods are accurate
 
-- Which team had the best pit stops? 
-
-- Compare which drivers / teams did better in which parts of the season (example: red bull is known for strong performances in the second half of a season because Mercedes stops development halfway through the season to focus on the next year's car)
-
-- how are DNFs distributed by drivers / teams? Is there a particular team / driver that crashes more? What about reliability? If one team (i.e. Red Bull in 2018) has fewer mechanical DNFs could they have done better in the standings? 
