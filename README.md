@@ -1,7 +1,7 @@
 # Formula-1-Statistics
 
 
-Formula 1 (F1) is an open-wheel racing series considered by many to be the pinacle of motorsport. Although largely seen as a Eurpoean sport, F1 races (Grand Prix) are held anually all over the world.
+Formula 1 (F1) is an open-wheel racing series considered by many to be the pinacle of motorsport. Although largely seen as a Eurpoean sport, F1 races (Grand Prix) are held annually all over the world.
 
 Teams are required to develop and build their own cars to fit within the regulations. The consequence of this is that the teams with the most money are usually the ones that win. This makes it difficult to determine whether a driver's performance is due to innate talent or car performance. That question has been the subject of endless debate among the fans, pundits, [blogs](https://f1metrics.wordpress.com/), and even some [research papers](https://www.degruyter.com/view/journals/jqas/12/2/article-p99.xml?language=en). 
 
