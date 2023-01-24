@@ -1,0 +1,13 @@
+name: f1_project
+channels:
+  - defaults
+dependencies:
+  - numpy
+  - pandas
+  - matplotlib
+  - jupyter
+  - psycopg2
+  - pip
+  - pip:
+    - kaggle
+

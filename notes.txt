@@ -1,0 +1,9 @@
+1) start running postgresql in a docker container:
+`sudo docker run --name postgres-container -e POSTGRES_PASSWORD=<password> -d -p 5432:5432 postgres`
+
+2) connect in psycopg2 using this:
+```
+from psycopg2 import connect
+
+conn = connect(dbname='postgres', user='postgres', port=5432, password=<password>, host='localhost')
+

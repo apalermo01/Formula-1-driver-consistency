@@ -1,7 +1,5 @@
-
-postgres_login_info.txt
-F1 data cleaning.ipynb
-F1 experimentation and exploration.ipynb
+*.log
+postgres_login_info.*
 archive/circuits.csv
 archive/constructor_results.csv
 archive/constructor_standings.csv
@@ -15,7 +13,4 @@ archive/races.csv
 archive/results.csv
 archive/seasons.csv
 archive/status.csv
-drafting.docx
 formula-1-world-championship-1950-2020.zip
-header image.png
-*.docx
