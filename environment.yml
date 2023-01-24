@@ -8,6 +8,4 @@ dependencies:
   - jupyter
   - psycopg2
   - pip
-  - pip:
-    - kaggle
 
