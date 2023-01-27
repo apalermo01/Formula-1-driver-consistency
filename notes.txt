@@ -7,3 +7,9 @@ from psycopg2 import connect
 
 conn = connect(dbname='postgres', user='postgres', port=5432, password=<password>, host='localhost')
 
+
+Project plan:
+
+goal is to build this like a data foundation
+
+Formula 1 API -> staging table -> transform / validation -> final database
