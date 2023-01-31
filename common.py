@@ -20,6 +20,7 @@ class DatabaseConnector:
 
     def execute_query(self,
                       query: str,
+                      vars: Union[Dict, None] = None,
                       ret: bool = False,
                       no_transact: bool = False,
                       dbname: Union[str, None] = None) -> Union[None, pd.DataFrame]:
@@ -37,6 +38,10 @@ class DatabaseConnector:
 
         if dbname is None:
             dbname = self.login_info['dbname']
+
+        if vars is None:
+            vars = {}
+
         res = None
         conn = connect(dbname = dbname,
                        user = self.login_info['user'],
@@ -49,7 +54,7 @@ class DatabaseConnector:
         try:
             with conn.cursor() as cur:
                 query = sql.SQL(query )
-                cur.execute(query)
+                cur.execute(query, vars)
 
                 if ret:
                         res = pd.DataFrame(cur.fetchall(),

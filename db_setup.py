@@ -40,7 +40,7 @@ if __name__ == '__main__':
     create_tables_query = load_query_from_file("schema.sql")
     queries = create_tables_query.split(";")
     for q in queries:
-        if len(q) == 0:
+        if len(q) < 5:
             continue
         query_to_execute = q + ";"
         connector.execute_query(query_to_execute)

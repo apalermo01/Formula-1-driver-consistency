@@ -1,4 +1,6 @@
 *.log
+*.pyc
+.cache/*
 postgres_login_info.*
 archive/circuits.csv
 archive/constructor_results.csv
