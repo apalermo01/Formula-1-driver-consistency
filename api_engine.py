@@ -7,8 +7,11 @@ import time
 import numpy as np
 import logging
 import requests
+import json
+import os
 
 logger = logging.getLogger(__name__)
+
 # requirements: don't call more than 4 times per second or 200 times in 1 hour
 COOLDOWN_PERIOD_S = 20
 
@@ -19,14 +22,23 @@ class APIEngine:
                  login_info: Dict):
         self.login_info = login_info
         self.connector = DatabaseConnector(postgres_login_info=login_info)
+        logger.debug("API engine initialized")
 
     def make_call(self,
                   tablename: str,
                   call_params: Union[None, Dict] = None) -> Union[None, pd.DataFrame]:
 
+        logger.debug(f"calling table {tablename} with params {call_params}")
+
         # input validation
         if call_params is None:
             call_params = {}
+
+        # check if we've cached the results
+        res = self._pull_cache(tablename, call_params)
+        if res:
+            logger.debug("returning cached response")
+            return res
 
         # check that the cooldown period has passed
         if not self.check_cooldown(tablename=tablename):
@@ -47,24 +59,56 @@ class APIEngine:
                     "timestamp": now
             }
             self.connector.execute_query(query, vars)
+            logger.debug(f"updated meta table with last call: table={tablename}, time={now}")
+
         except Exception as e:
             logger.error(e)
             return
 
         # make the call
-        url = self.make_url(call_params)
-        call_results = self._call(url)
+        url = self.make_url(tablename, call_params)
+        response = self._call(url)
 
+        self._update_cache(response, tablename, call_params)
         # update staging table
+        self.update_table(response)
 
         # update meta table with call results
 
         # return results
 
+    @staticmethod
+    def _get_path_for_cache(tablename: str, call_params: Dict) -> str:
+        param_list = ''.join([f"_{key}={call_params[key]}" for key in call_params])
+        filename = f"{tablename}{param_list}.json"
+        path = os.path.join(".cache", filename)
+        return path
 
-    def update_table(self):
+    def _update_cache(self,
+                      response: requests.Response,
+                      tablename: str,
+                      call_params: Dict):
+        if response.status_code == 200:
+            path = self._get_path_for_cache(tablename, call_params)
+            logger.debug(f"updating cache, path = {path}")
+            with open(path, "w") as f:
+                json.dump(response.json(), f)
+
+    def _pull_cache(self,
+                    tablename: str,
+                    call_params: Dict) -> Union[None, Dict]:
+
+        path = self._get_path_for_cache(tablename, call_params)
+        if os.path.exists(path):
+            with open(path, "r") as f:
+                response = json.load(f)
+            return response
+        else:
+            return None
+
+    def update_table(self, call_results):
         # update the staging table with data pulled from api call
-        pass
+        logger.debug(f"recieved call results: {call_results}")
 
     def check_cooldown(self, tablename: str) -> bool:
         # check that the cooldown for the api has passed
