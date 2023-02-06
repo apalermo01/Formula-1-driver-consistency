@@ -6,6 +6,7 @@ from textwrap import dedent
 import time
 import numpy as np
 import logging
+import requests
 
 logger = logging.getLogger(__name__)
 # requirements: don't call more than 4 times per second or 200 times in 1 hour
@@ -35,17 +36,24 @@ class APIEngine:
         # update the meta table with the last call time
         # note that the current call time is being recorded BEFORE the call is
         # attempted
-        query = dedent("""
-        INSERT INTO meta (table_name, last_call)
-        VALUES (%(table)s, %(timestamp)s);
-        """)
-        now = int(np.datetime64('now').astype(int))
-        vars = {
-                "table": tablename,
-                "timestamp": now
-        }
-        self.connector.execute_query(query, vars)
+        try:
+            query = dedent("""
+            INSERT INTO meta (table_name, last_call)
+            VALUES (%(table)s, %(timestamp)s);
+            """)
+            now = int(np.datetime64('now').astype(int))
+            vars = {
+                    "table": tablename,
+                    "timestamp": now
+            }
+            self.connector.execute_query(query, vars)
+        except Exception as e:
+            logger.error(e)
+            return
+
         # make the call
+        url = self.make_url(call_params)
+        call_results = self._call(url)
 
         # update staging table
 
@@ -81,6 +89,20 @@ class APIEngine:
         now = np.datetime64('now')
         delta = int((now - last_call).astype(int))
         return delta > COOLDOWN_PERIOD_S
+
+    def make_url(self, tablename, call_params) -> str:
+        # take the requested query parameters and build the url to submit to the api call
+        url = "http://ergast.com/api/f1/"
+        if tablename == 'seasons':
+            url += 'seasons.json'
+        else:
+            raise NotImplementedError("can only call seasons table, method is still under development")
+        return url
+
+    def _call(self, url):
+        # make the actual api call
+        response = requests.get(url)
+        return response
 
     def load_cache(self, ) -> pd.DataFrame:
         # load the saved data from an api call

@@ -4,7 +4,9 @@ from postgres_login_info import login_info
 
 def test_api_call():
     api_caller = APIEngine(login_info)
-    api_caller.make_call("constructors")
+    params = {}
+    api_caller.make_call(tablename='seasons',
+                         call_params=params)
 
 
 def main():
