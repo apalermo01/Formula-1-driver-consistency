@@ -9,3 +9,7 @@ Planned updates (not in order)
 - Investigate what the season results would have looked like if a given driver hadn't retired. 
 
 - Convert these visualizations into interactive dashboards using excel and / or tableau
+
+API engine:
+- play with cerberus for data validation
+- sqlalchemy -> use this to sanitize inputs

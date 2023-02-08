@@ -15,6 +15,11 @@ logger = logging.getLogger(__name__)
 # requirements: don't call more than 4 times per second or 200 times in 1 hour
 COOLDOWN_PERIOD_S = 20
 
+TABLE_SCHEMA = {
+    'seasons': {
+
+        }
+}
 
 class APIEngine:
 
@@ -35,10 +40,22 @@ class APIEngine:
             call_params = {}
 
         # check if we've cached the results
-        res = self._pull_cache(tablename, call_params)
-        if res:
+        response = self._pull_cache(tablename, call_params)
+        if response:
             logger.debug("returning cached response")
-            return res
+        else:
+            response = self._do_live_call(tablename, call_params)
+
+        # update staging table
+        self._update_table(response)
+
+        # update meta table with call results
+
+        # return results
+
+    def _do_live_call(self,
+                      tablename: str,
+                      call_params: Union[None, Dict] = None):
 
         # check that the cooldown period has passed
         if not self.check_cooldown(tablename=tablename):
@@ -70,12 +87,7 @@ class APIEngine:
         response = self._call(url)
 
         self._update_cache(response, tablename, call_params)
-        # update staging table
-        self.update_table(response)
 
-        # update meta table with call results
-
-        # return results
 
     @staticmethod
     def _get_path_for_cache(tablename: str, call_params: Dict) -> str:
@@ -106,9 +118,19 @@ class APIEngine:
         else:
             return None
 
-    def update_table(self, call_results):
+    def _update_table(self, call_results):
         # update the staging table with data pulled from api call
-        logger.debug(f"recieved call results: {call_results}")
+        logger.debug(f"recieved call results: {call_results['MRData'].keys()}")
+        table = 'SeasonTable'
+        table_key = 'Seasons'
+        colnames = call_results['MRData'][table][table_key][0].keys()
+        data = call_results['MRData'][table][table_key]
+        ncols = len(data)
+        # TODO: put number of columns recieved in meta table
+        #insert_query = f"""
+        #INSERT INTO %(tablename)(%s)
+        #"""
+        logger.debug(f"recieved call results: {colnames}")
 
     def check_cooldown(self, tablename: str) -> bool:
         # check that the cooldown for the api has passed
