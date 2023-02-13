@@ -1,5 +1,6 @@
 from typing import Union, Dict
 from psycopg2 import connect, sql
+import psycopg2 as pg
 import pandas as pd
 from common import DatabaseConnector
 from textwrap import dedent
@@ -17,8 +18,8 @@ COOLDOWN_PERIOD_S = 20
 
 TABLE_SCHEMA = {
     'seasons': {
-
-        }
+        'colnames': ['year', 'url']
+    }
 }
 
 class APIEngine:
@@ -121,17 +122,36 @@ class APIEngine:
     def _update_table(self, call_results):
         # update the staging table with data pulled from api call
         logger.debug(f"recieved call results: {call_results['MRData'].keys()}")
+
+        # hardcoded table data for development purposes
         table = 'SeasonTable'
         table_key = 'Seasons'
+        tablename = 'seasons'
+
         colnames = call_results['MRData'][table][table_key][0].keys()
         data = call_results['MRData'][table][table_key]
-        ncols = len(data)
+        nrows = len(data)
         # TODO: put number of columns recieved in meta table
-        #insert_query = f"""
-        #INSERT INTO %(tablename)(%s)
-        #"""
         logger.debug(f"recieved call results: {colnames}")
+        logger.debug(f"recieved {nrows} rows")
 
+        colnames = TABLE_SCHEMA[tablename]['colnames']
+
+        params = {
+            'table': sql.Identifier(tablename),
+            'collist': sql.SQL(',').join([sql.Identifier(c) for c in colnames])
+        }
+
+        query = dedent("""
+        INSERT INTO {table}({collist}) VALUES %s
+        """)
+
+        data_tuple = [tuple(row.values()) for row in data]
+
+        rows_affected = self.connector.execute_insert(
+            query, data_tuple, params=params
+        )
+        logger.warning(f"updated {rows_affected} rows in table {tablename}")
     def check_cooldown(self, tablename: str) -> bool:
         # check that the cooldown for the api has passed
 

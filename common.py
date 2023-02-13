@@ -1,7 +1,10 @@
 import pandas as pd
 from psycopg2 import connect, extensions, sql
 from typing import Union, Dict
+from psycopg2.extras import execute_values
+import logging
 
+logger = logging.getLogger(__name__)
 ### constants
 DBNAME = "f1-project"
 DBUSER = 'postgres'
@@ -17,6 +20,28 @@ class DatabaseConnector:
     def __init__(self,
             postgres_login_info: Dict,):
         self.login_info = postgres_login_info
+
+    def execute_insert(self,
+                       query: str,
+                       vars: Union[Dict, None] = None,
+                       params: Dict = None,
+                       dbname:  Union[str, None] = None) -> int:
+        if dbname is None:
+            dbname = self.login_info['dbname']
+        if params is None:
+            params = {}
+        conn = connect(dbname = dbname,
+                       user = self.login_info['user'],
+                       password = self.login_info['password'],
+                       host = self.login_info['host'],
+                       port = self.login_info['port'],)
+        with conn.cursor() as cur:
+            query = sql.SQL(query).format(**params)
+            execute_values(cur, query, vars)
+            conn.commit()
+            rowcount = cur.rowcount
+        conn.close()
+        return rowcount
 
     def execute_query(self,
                       query: str,
