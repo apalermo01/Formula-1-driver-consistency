@@ -19,6 +19,7 @@ table_name VARCHAR(100) NOT NULL,
 last_call BIGINT  NOT NULL,
 last_call_response INTEGER,
 num_rows_pulled INTEGER,
+num_rows_modified INTEGER,
 next_offset INTEGER
 );
 
